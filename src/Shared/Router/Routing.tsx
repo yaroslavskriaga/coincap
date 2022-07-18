@@ -11,13 +11,11 @@ import { systemStateSelector } from '../System/State/SystemSelectors';
 export const Routing: React.FC = () => {
   const systemState = useSelector(systemStateSelector);
 
-  console.log(systemState);
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path={AppRoutes.Login} element={<LoginPage />} />
-        <Route path="/" element={<SecureRoutes loggedIn />}>
+        <Route path="/" element={<SecureRoutes loggedIn={systemState.loggedIn} />}>
           <Route path={AppRoutes.Dashboard} element={<DashboardPage />} />
         </Route>
       </Routes>

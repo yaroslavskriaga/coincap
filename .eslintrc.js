@@ -43,6 +43,8 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    'no-promise-executor-return': 'off',
+    'no-alert': 'off',
     'switch-colon-spacing': ['error', { after: true, before: false }],
     'default-param-last': 'off',
     'react/jsx-props-no-spreading': 'off',
@@ -51,16 +53,8 @@ module.exports = {
     'react/no-children-prop': 'off',
     'react/function-component-definition': 'off',
     'no-underscore-dangle': 'off',
-    'jsx-a11y/label-has-associated-control': ['error', {
-      required: {
-        some: ['nesting', 'id'],
-      },
-    }],
-    'jsx-a11y/label-has-for': ['error', {
-      required: {
-        some: ['nesting', 'id'],
-      },
-    }],
+    'jsx-a11y/label-has-associated-control': 'off',
+    'jsx-a11y/label-has-for': 'off',
     'react/jsx-no-bind': 'off',
     'max-len': ['error', { code: 150 }],
     'no-unused-vars': 'off',

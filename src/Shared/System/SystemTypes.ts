@@ -1,4 +1,6 @@
 export const UPDATE_USERINFO = 'UPDATE_USERINFO';
+export const UPDATE_SESSION = 'UPDATE_SESSION';
+export const CLEAR_SESSION = 'CLEAR_SESSION';
 
 export enum UserRoleEnum {
     User = 'USER'
@@ -22,3 +24,21 @@ export interface SystemStateInterface {
 export interface SystemStateSelectorInterface {
     System: SystemStateInterface
 }
+
+export interface UpdateSessionAction extends SystemStateInterface{
+    type: typeof UPDATE_SESSION;
+}
+
+export interface ClearSessionAction{
+    type: typeof CLEAR_SESSION;
+}
+
+interface UpdateUserInfoAction {
+    type: typeof UPDATE_USERINFO;
+    payload: Partial<UserInfoInterface>;
+}
+
+export type SystemActionTypes =
+    | UpdateSessionAction
+    | ClearSessionAction
+    | UpdateUserInfoAction

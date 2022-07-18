@@ -1,22 +1,29 @@
-import { ReactElement } from 'react';
+import {
+  ReactElement, useCallback, useEffect, useState,
+} from 'react';
 import { Login } from './Login';
 import { LayoutPage } from '../../Shared/Layout/LayoutPage';
 import AuthService from '../../Services/Auth-Service';
+import { UserInfoInterface } from '../../Shared/System/SystemTypes';
 
 export function LoginPage(): ReactElement {
-  function login() {
-    return AuthService
-      .login()
-      .then((data: any) => {
-        console.log(data);
-      });
-  }
+  const [userData, setUserData] = useState<UserInfoInterface | undefined>();
 
-  login();
+  const handleLogin = useCallback((): void => {
+    AuthService
+      .login()
+      .then((data: UserInfoInterface) => {
+        setUserData(data);
+      });
+  }, []);
+
+  useEffect(() => {
+    handleLogin();
+  }, []);
 
   return (
     <LayoutPage centred>
-      <Login />
+      <Login userData={userData} />
     </LayoutPage>
   );
 }
