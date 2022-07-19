@@ -1,12 +1,12 @@
 import { AxiosResponse } from 'axios';
 import { httpGet, localGet } from './HTTP-Service';
 import {
-  API_ASSET_DETAILS, API_ASSET_INTERVAL, API_RATES, API_TOKENS, API_USERS,
+  API_ASSET_DETAILS, API_ASSET_INTERVAL, API_RATES, API_TOKENS,
 } from '../Api/Api';
 import { AssetIntervalInterface } from '../Api/AssetIntervalInterfaces';
 import { AssetsInterface } from '../Api/AssetsInterfaces';
 import { RatesInterface } from '../Api/RatesInterfaces';
-import { TokenInterface, UserInfoInterface } from '../Shared/System/SystemTypes';
+import { TokenInterface } from '../Shared/System/SystemTypes';
 
 const getRates = (crypto: string): Promise<RatesInterface> => httpGet(API_RATES(crypto))
   .then((data: AxiosResponse) => data.data);

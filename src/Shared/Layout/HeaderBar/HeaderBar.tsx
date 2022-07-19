@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ClearSessionAction, SystemActionTypes } from '../../System/SystemTypes';
 import { clearSession } from '../../System/State/SystemActions';
-import { AppRoutes } from '../../Router/Routes';
+import { AppRoutes } from '../../Router/Utils/RouterHelpers';
 
 interface AppBarInterface {
   isLoggedIn: boolean;
@@ -24,7 +24,7 @@ export function HeaderBar({ isLoggedIn }: AppBarInterface): ReactElement {
     const dispatchAction = dispatch as Dispatch<SystemActionTypes>;
     dispatchAction(clearSession());
     navigate(AppRoutes.Login);
-  }, []);
+  }, [dispatch, navigate]);
 
   return (
     <Box>

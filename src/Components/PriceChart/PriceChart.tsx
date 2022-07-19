@@ -8,16 +8,15 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend, ChartData,
 } from 'chart.js';
-import {
-  Box, LinearProgress, Typography, useTheme,
-} from '@mui/material';
+import { Box, LinearProgress } from '@mui/material';
 import Button from '@mui/material/Button';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { formatTime } from '../../Shared/Utils/Helpers';
 import { useStylesPriceChart } from './Styles/PriceChartStyles';
 import { InfoLabel } from '../InfoLabel/InfoLabel';
+import { ChartDataInterface } from './Utils/PriceChartInterfaces';
 
 ChartJS.register(
   CategoryScale,
@@ -30,14 +29,13 @@ ChartJS.register(
 );
 
 interface ChartInterface {
-  chartData: any
-  updateChart():void;
-  timestamp:number;
+  chartData: ChartDataInterface | undefined;
+  updateChart(): void;
+  timestamp: number;
 }
 
 export function PriceChart({ chartData, timestamp, updateChart }: ChartInterface): ReactElement {
   const [delay, setDelay] = useState<boolean>(false);
-  const theme = useTheme();
 
   const handleUpdateChart = useCallback((): void => {
     updateChart();
@@ -45,10 +43,10 @@ export function PriceChart({ chartData, timestamp, updateChart }: ChartInterface
     setTimeout(() => {
       setDelay(false);
     }, 1000);
-  }, [delay]);
+  }, [updateChart]);
 
   return (
-    <Box sx={useStylesPriceChart(theme).chart}>
+    <Box sx={useStylesPriceChart().chart}>
       <Button
         disabled={delay}
         endIcon={<RefreshIcon />}
@@ -68,7 +66,7 @@ export function PriceChart({ chartData, timestamp, updateChart }: ChartInterface
         </Box>
       ) : (
         <Line
-          data={chartData}
+          data={chartData || [] as unknown as ChartData<'line', string[], string>}
           options={{
             plugins: {
               title: {

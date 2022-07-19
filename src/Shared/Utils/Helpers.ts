@@ -14,7 +14,7 @@ export function formatDate(timestamp: number | undefined): string {
   return '-';
 }
 
-export const formatCurrency = new Intl.NumberFormat('en-US', {
+export const formatCurrency: Intl.NumberFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
   minimumFractionDigits: 2,

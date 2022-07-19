@@ -4,11 +4,11 @@ import {
 } from '@mui/material';
 
 interface InfoLabelRowInterface {
-    labelName:string;
-    value:string | undefined | number;
+    labelName: string;
+    value: string | undefined | number;
     labelSx: SxProps;
-    withLink?:boolean;
-    link?:string;
+    withLink?: boolean;
+    link?: string;
 }
 
 export function InfoLabelRow({

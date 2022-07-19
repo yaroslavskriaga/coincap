@@ -1,6 +1,4 @@
-import { Theme } from '@mui/material';
-
-export const useStylesPriceChart = (theme: Theme) => ({
+export const useStylesPriceChart = () => ({
   chart: {
     backgroundColor: 'honeydew',
     padding: '25px',

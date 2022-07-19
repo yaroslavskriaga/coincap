@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react';
 import { Box, Typography } from '@mui/material';
 
 interface InfoLabelInterface {
-    labelName:string;
-    value:string | undefined | number;
+    labelName: string;
+    value: string | undefined | number;
 }
 
 export function InfoLabel({ labelName, value }: InfoLabelInterface): ReactElement {

@@ -22,7 +22,7 @@ export function LoginPage(): ReactElement {
 
   useEffect(() => {
     handleLogin();
-  }, []);
+  }, [handleLogin]);
 
   return (
     <LayoutPage centred isLoggedIn={systemState.loggedIn}>

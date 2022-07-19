@@ -1,9 +1,15 @@
 import React, { ReactElement } from 'react';
-import { Field, Form } from 'formik';
+import { Field, FormikErrors, FormikTouched } from 'formik';
 import { Box, useTheme } from '@mui/material';
-import { useStylesLogin } from './Styles/LoginStyles';
+import { useStylesLogin } from '../Styles/LoginStyles';
+import { LoginInitialValuesInterface } from '../Utils/LoginInterfaces';
 
-export function LoginFormFields({ errors, touched }: any): ReactElement {
+export interface LoginFormFieldsInterface {
+    errors: FormikErrors<LoginInitialValuesInterface>;
+    touched: FormikTouched<LoginInitialValuesInterface>
+}
+
+export function LoginFormFields({ errors, touched }: LoginFormFieldsInterface): ReactElement {
   const theme = useTheme();
 
   return (

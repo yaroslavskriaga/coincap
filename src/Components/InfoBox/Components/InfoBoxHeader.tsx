@@ -1,5 +1,5 @@
-import React, { ReactElement, useCallback, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { ReactElement, useCallback } from 'react';
+import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { InfoLabel } from '../../InfoLabel/InfoLabel';
@@ -7,7 +7,7 @@ import { InfoLabel } from '../../InfoLabel/InfoLabel';
 interface InfoBoxHeaderInterface {
     timestamp: string;
     rank: string | undefined;
-    updateAsset():void;
+    updateAsset(): void;
     setDelay(state: boolean): void;
     delay: boolean
 }
@@ -15,13 +15,13 @@ interface InfoBoxHeaderInterface {
 export function InfoBoxHeader({
   timestamp, rank, updateAsset, setDelay, delay,
 }: InfoBoxHeaderInterface): ReactElement {
-  const handleUpdateAsset = useCallback(() => {
+  const handleUpdateAsset = useCallback((): void => {
     updateAsset();
     setDelay(true);
     setTimeout(() => {
       setDelay(false);
     }, 1000);
-  }, []);
+  }, [setDelay, updateAsset]);
 
   return (
     <Box display="flex" justifyContent="space-between" alignItems="center">

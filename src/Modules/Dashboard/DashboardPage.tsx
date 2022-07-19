@@ -1,7 +1,6 @@
 import React, {
   ReactElement, useCallback, useEffect, useMemo, useState,
 } from 'react';
-import { useSelector } from 'react-redux';
 import { Dashboard } from './Dashboard';
 import CoincapService from '../../Services/Coincap-Service';
 import { AssetsInterface } from '../../Api/AssetsInterfaces';
@@ -33,13 +32,13 @@ export function DashboardPage(): ReactElement {
       Object.entries(tokensData as {}).find(([key, value]) => {
         if (value === 'bitcoin') {
           bitcoin = value;
-          return true;
+          return key;
         }
         return false;
       });
     }
     return bitcoin;
-  }, [tokensData, handleTokens]);
+  }, [tokensData]);
 
   const handleGetRates = useCallback((crypto: string): void => {
     if (findBitcoin) {
@@ -86,7 +85,7 @@ export function DashboardPage(): ReactElement {
       handleGetAssetDetails(findBitcoin);
       handleGetAssetInterval(findBitcoin);
     }
-  }, [findBitcoin]);
+  }, [findBitcoin, handleGetAssetDetails, handleGetAssetInterval, handleGetRates, handleTokens]);
 
   return (
     <LayoutPage centred>

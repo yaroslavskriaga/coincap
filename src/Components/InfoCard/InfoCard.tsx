@@ -1,11 +1,11 @@
 import React, {
-  ReactElement, useCallback, useMemo, useState,
+  ReactElement, useCallback, useState,
 } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
-import { Box, LinearProgress, useTheme } from '@mui/material';
+import { Box, LinearProgress } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { formatCurrency, formatTime } from '../../Shared/Utils/Helpers';
 import { RatesItemInterface } from '../../Api/RatesInterfaces';
@@ -21,19 +21,19 @@ interface InfoCardInterface{
 }
 
 export function InfoCard({ cryptoItem, timestamp, updateRates }: InfoCardInterface): ReactElement {
-  const theme = useTheme();
   const [delay, setDelay] = useState<boolean>(false);
-  const handleUpdateRates = useCallback(() => {
+
+  const handleUpdateRates = useCallback((): void => {
     updateRates();
     setDelay(true);
     setTimeout(() => {
       setDelay(false);
     }, 1000);
-  }, [delay]);
+  }, [updateRates]);
 
   return (
-    <Card sx={useStylesInfoCard(theme).card}>
-      <CardContent sx={useStylesInfoCard(theme).cardContent}>
+    <Card sx={useStylesInfoCard().card}>
+      <CardContent sx={useStylesInfoCard().cardContent}>
         {delay ? (
           <>
             <Box mt={1} />
@@ -44,12 +44,12 @@ export function InfoCard({ cryptoItem, timestamp, updateRates }: InfoCardInterfa
             <InfoLabelRow
               labelName="Currency"
               value={`${cryptoItem?.currencySymbol}[${cryptoItem?.symbol}]`}
-              labelSx={useStylesInfoCard(theme).label}
+              labelSx={useStylesInfoCard().label}
             />
             <InfoLabelRow
               labelName={`Price, ${USD_CURRENCY_TICKER}`}
               value={formatCurrency.format(Number(cryptoItem?.rateUsd))}
-              labelSx={useStylesInfoCard(theme).label}
+              labelSx={useStylesInfoCard().label}
             />
           </>
         )}

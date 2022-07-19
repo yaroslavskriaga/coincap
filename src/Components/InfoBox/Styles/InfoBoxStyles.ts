@@ -1,6 +1,4 @@
-import { Theme } from '@mui/material';
-
-export const useStylesInfoBox = (theme: Theme) => ({
+export const useStylesInfoBox = () => ({
   label: {
     fontSize: '12px',
   },

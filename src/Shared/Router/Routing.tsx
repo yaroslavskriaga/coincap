@@ -3,10 +3,11 @@ import {
   BrowserRouter, Route, Routes,
 } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { AppRoutes, SecureRoutes } from './Routes';
 import { LoginPage } from '../../Modules/Login/LoginPage';
 import { DashboardPage } from '../../Modules/Dashboard/DashboardPage';
 import { systemStateSelector } from '../System/State/SystemSelectors';
+import { AppRoutes } from './Utils/RouterHelpers';
+import { SecureRoutes } from './Routes';
 
 export const Routing: React.FC = () => {
   const systemState = useSelector(systemStateSelector);

@@ -41,8 +41,11 @@ module.exports = {
   plugins: [
     'react',
     '@typescript-eslint',
+    'react-hooks',
   ],
   rules: {
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'react-hooks/exhaustive-deps': 'warn',
     'no-promise-executor-return': 'off',
     'no-alert': 'off',
     'switch-colon-spacing': ['error', { after: true, before: false }],

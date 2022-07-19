@@ -10,11 +10,11 @@ import { PriceChart } from '../../Components/PriceChart/PriceChart';
 interface DashboardInterface {
   ratesData: RatesInterface | undefined;
   assetData: AssetsInterface | undefined;
-  chartTimestamp:number | undefined;
+  chartTimestamp: number | undefined;
   chartData: ChartDataInterface | undefined;
   refreshRates(): void;
-  refreshAsset():void;
-  refreshChart():void;
+  refreshAsset(): void;
+  refreshChart(): void;
 }
 
 export function Dashboard({
@@ -39,5 +39,9 @@ export function Dashboard({
         <PriceChart updateChart={refreshChart} chartData={chartData} timestamp={chartTimestamp || 0} />
       </>
     );
-  }, [ratesData, assetData, chartData]);
+  }, [
+    isLoading, refreshRates, ratesData?.data,
+    ratesData?.timestamp, assetData?.data,
+    assetData?.timestamp, refreshAsset,
+    refreshChart, chartData, chartTimestamp]);
 }
