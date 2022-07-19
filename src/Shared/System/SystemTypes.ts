@@ -16,6 +16,10 @@ export type UserInfoInterface = {
     KYC: boolean;
 }
 
+export type TokenInterface = {
+    name: string;
+}
+
 export interface SystemStateInterface {
     loggedIn: boolean;
     userInfo: UserInfoInterface;

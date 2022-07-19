@@ -1,6 +1,7 @@
 import React, {
-  ReactElement, useCallback, useEffect, useState,
+  ReactElement, useCallback, useEffect, useMemo, useState,
 } from 'react';
+import { useSelector } from 'react-redux';
 import { Dashboard } from './Dashboard';
 import CoincapService from '../../Services/Coincap-Service';
 import { AssetsInterface } from '../../Api/AssetsInterfaces';
@@ -8,32 +9,59 @@ import { RatesInterface } from '../../Api/RatesInterfaces';
 import { AssetIntervalInterface, AssetItemIntervalInterface } from '../../Api/AssetIntervalInterfaces';
 import { formatDate } from '../../Shared/Utils/Helpers';
 import { ChartDataInterface } from '../../Components/PriceChart/Utils/PriceChartInterfaces';
+import { LayoutPage } from '../../Shared/Layout/LayoutPage';
+import { TokenInterface } from '../../Shared/System/SystemTypes';
 
 export function DashboardPage(): ReactElement {
   const [ratesData, setRatesData] = useState<RatesInterface | undefined>();
+  const [tokensData, setTokensData] = useState<TokenInterface>();
   const [assetData, setAssetData] = useState<AssetsInterface | undefined>();
   const [chartData, setChartData] = useState<ChartDataInterface>();
   const [chartTimestampData, setChartTimestampData] = useState<number>();
 
-  const handleGetRates = useCallback((): void => {
+  const handleTokens = useCallback((): void => {
     CoincapService
-      .getRates()
-      .then((data: RatesInterface) => {
-        setRatesData(data);
+      .getTokens()
+      .then((data: TokenInterface) => {
+        setTokensData(data);
       });
   }, []);
 
-  const handleGetAssetDetails = useCallback((): void => {
+  const findBitcoin = useMemo((): string => {
+    let bitcoin: string = '';
+    if (tokensData !== undefined) {
+      Object.entries(tokensData as {}).find(([key, value]) => {
+        if (value === 'bitcoin') {
+          bitcoin = value;
+          return true;
+        }
+        return false;
+      });
+    }
+    return bitcoin;
+  }, [tokensData, handleTokens]);
+
+  const handleGetRates = useCallback((crypto: string): void => {
+    if (findBitcoin) {
+      CoincapService
+        .getRates(crypto)
+        .then((data: RatesInterface) => {
+          setRatesData(data);
+        });
+    }
+  }, [findBitcoin]);
+
+  const handleGetAssetDetails = useCallback((crypto: string): void => {
     CoincapService
-      .getAssetDetails()
+      .getAssetDetails(crypto)
       .then((data: AssetsInterface) => {
         setAssetData(data);
       });
   }, []);
 
-  const handleGetAssetInterval = useCallback((): void => {
+  const handleGetAssetInterval = useCallback((crypto: string): void => {
     CoincapService
-      .getAssetInterval()
+      .getAssetInterval(crypto)
       .then((data: AssetIntervalInterface) => {
         setChartTimestampData(data.timestamp);
         setChartData({
@@ -52,20 +80,25 @@ export function DashboardPage(): ReactElement {
   }, []);
 
   useEffect(() => {
-    handleGetRates();
-    handleGetAssetDetails();
-    handleGetAssetInterval();
-  }, []);
+    handleTokens();
+    if (findBitcoin) {
+      handleGetRates(findBitcoin);
+      handleGetAssetDetails(findBitcoin);
+      handleGetAssetInterval(findBitcoin);
+    }
+  }, [findBitcoin]);
 
   return (
-    <Dashboard
-      chartTimestamp={chartTimestampData}
-      chartData={chartData}
-      assetData={assetData}
-      ratesData={ratesData}
-      refreshRates={handleGetRates}
-      refreshAsset={handleGetAssetDetails}
-      refreshChart={handleGetAssetInterval}
-    />
+    <LayoutPage centred>
+      <Dashboard
+        chartTimestamp={chartTimestampData}
+        chartData={chartData}
+        assetData={assetData}
+        ratesData={ratesData}
+        refreshRates={() => handleGetRates(findBitcoin)}
+        refreshAsset={() => handleGetAssetDetails(findBitcoin)}
+        refreshChart={() => handleGetAssetInterval((findBitcoin))}
+      />
+    </LayoutPage>
   );
 }

@@ -1,9 +1,17 @@
-import React, { ReactElement, useCallback } from 'react';
-import { Box, Link, Paper } from '@mui/material';
+import React, {
+  ReactElement, useCallback, useMemo, useState,
+} from 'react';
+import {
+  Box, LinearProgress, Link, Paper, Typography, useTheme,
+} from '@mui/material';
 import Button from '@mui/material/Button';
-import { formatTime } from '../../Shared/Utils/Helpers';
+import { formatCurrency, formatTime } from '../../Shared/Utils/Helpers';
 import { AssetsItemInterface } from '../../Api/AssetsInterfaces';
 import { USD_CURRENCY_TICKER } from '../../Shared/Config';
+import { useStylesInfoBox } from './Styles/InfoBoxStyles';
+import { InfoBoxHeader } from './Components/InfoBoxHeader';
+import { InfoLabelRow } from '../InfoLabelRow/InfoLabelRow';
+import { useStylesInfoCard } from '../InfoCard/Styles/InfoCardStyles';
 
 interface InfoBoxInterface {
     cryptoItem: AssetsItemInterface | undefined;
@@ -13,78 +21,87 @@ interface InfoBoxInterface {
 }
 
 export function InfoBox({ cryptoItem, timestamp, updateAsset }:InfoBoxInterface): ReactElement {
-  const handleUpdateAsset = useCallback(() => {
-    updateAsset();
-  }, []);
+  const theme = useTheme();
+  const [delay, setDelay] = useState<boolean>(false);
+
+  const makeExplorerLink = useMemo((): string | undefined => {
+    if (cryptoItem?.symbol === 'BTC') {
+      const symbol = cryptoItem?.symbol.toLocaleLowerCase();
+      return `https://www.blockchain.com/explorer?view=${symbol}`;
+    } if (cryptoItem?.symbol === 'ETH') {
+      return cryptoItem?.explorer;
+    }
+
+    const symbol = cryptoItem?.name.toLocaleLowerCase();
+    return `https://blockchair.com/${symbol}`;
+  }, [cryptoItem]);
 
   return (
-    <Paper elevation={3}>
-      Time -
-      {' '}
-      {formatTime(timestamp)}
-      <br />
-      <Box>
-        <Box>Rank</Box>
-        <Box>{cryptoItem?.rank}</Box>
-      </Box>
-      <Box>
-        <Box>Crypto</Box>
-        <Box>
-          {cryptoItem?.name}
-          [
-          {cryptoItem?.symbol}
-          ]
-        </Box>
-      </Box>
-      <Box>
-        <Box>Supply</Box>
-        <Box>{cryptoItem?.supply}</Box>
-      </Box>
-      <Box>
-        <Box>Max Supply</Box>
-        <Box>{cryptoItem?.maxSupply}</Box>
-      </Box>
-      <Box>
-        <Box>
-          Market Cap,
-          {USD_CURRENCY_TICKER}
-        </Box>
-        <Box>{cryptoItem?.marketCapUsd}</Box>
-      </Box>
-      <Box>
-        <Box>
-          Volume 24h,
-          {USD_CURRENCY_TICKER}
-        </Box>
-        <Box>{cryptoItem?.volumeUsd24Hr}</Box>
-      </Box>
-      <Box>
-        <Box>
-          Price,
-          {USD_CURRENCY_TICKER}
-        </Box>
-        <Box>{cryptoItem?.priceUsd}</Box>
-      </Box>
-      <Box>
-        <Box>Change(%), 24h</Box>
-        <Box>{cryptoItem?.changePercent24Hr}</Box>
-      </Box>
-      <Box>
-        <Box>
-          Volume-Weighted Average Price (VWAP),
-          {USD_CURRENCY_TICKER}
-        </Box>
-        <Box>{cryptoItem?.vwap24Hr}</Box>
-      </Box>
-      <Box>
-        <Box>Explore</Box>
-        <Box>
-          <Link href={cryptoItem?.explorer} underline="hover">
-            {cryptoItem?.explorer}
-          </Link>
-        </Box>
-      </Box>
-      <Button variant="contained" type="button" size="small" onClick={handleUpdateAsset}>Refresh</Button>
+    <Paper sx={useStylesInfoBox(theme).paper} elevation={3}>
+      <InfoBoxHeader
+        delay={delay}
+        setDelay={setDelay}
+        timestamp={formatTime(timestamp)}
+        updateAsset={updateAsset}
+        rank={cryptoItem?.rank}
+      />
+      <Box mb={1} />
+      {delay ? (
+        <>
+          <Box mt={1} />
+          <LinearProgress />
+        </>
+      ) : (
+        <>
+          <InfoLabelRow
+            labelName="Crypto"
+            value={`${cryptoItem?.name}[${cryptoItem?.symbol}]`}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            labelName="Supply"
+            value={Number(cryptoItem?.supply).toFixed(0)}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            labelName="Max Supply"
+            value={Number(cryptoItem?.maxSupply).toFixed(0)}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            labelName={`Market Cap, ${USD_CURRENCY_TICKER}`}
+            value={formatCurrency.format(Number(cryptoItem?.marketCapUsd))}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            labelName={`Volume 24h, ${USD_CURRENCY_TICKER}`}
+            value={formatCurrency.format(Number(cryptoItem?.volumeUsd24Hr))}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            labelName={`Price, ${USD_CURRENCY_TICKER}`}
+            value={formatCurrency.format(Number(cryptoItem?.priceUsd))}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            labelName="Change (%), 24h"
+            value={Number(cryptoItem?.changePercent24Hr).toFixed(2)}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            labelName={`Volume-Weighted Average Price (VWAP), ${USD_CURRENCY_TICKER}`}
+            value={formatCurrency.format(Number(cryptoItem?.vwap24Hr))}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+          <InfoLabelRow
+            withLink
+            link={makeExplorerLink}
+            labelName="Explore"
+            value={cryptoItem?.explorer}
+            labelSx={useStylesInfoBox(theme).label}
+          />
+        </>
+      )}
     </Paper>
   );
 }

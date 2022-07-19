@@ -1,3 +1,5 @@
-import { SystemStateInterface, UserInfoInterface } from '../SystemTypes';
+import { SystemStateInterface } from '../SystemTypes';
 
-export const INITIAL_STATE: SystemStateInterface = <SystemStateInterface>{};
+export const INITIAL_STATE: SystemStateInterface = <SystemStateInterface>{
+  loggedIn: false,
+};

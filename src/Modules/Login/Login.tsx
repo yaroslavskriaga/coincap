@@ -1,11 +1,15 @@
 import React, {
   ReactElement, useCallback,
 } from 'react';
-import { Paper } from '@mui/material';
+import {
+  Box, Button, Paper, Typography, useTheme,
+} from '@mui/material';
 import { Form, Formik } from 'formik';
 import { Dispatch } from 'redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import LoginIcon from '@mui/icons-material/Login';
+import { useSnackbar } from 'notistack';
 import { SystemActionTypes, UpdateSessionAction, UserInfoInterface } from '../../Shared/System/SystemTypes';
 import { updateSession } from '../../Shared/System/State/SystemActions';
 import { getUserRoleByString } from '../../Shared/System/State/SystemSelectors';
@@ -14,6 +18,7 @@ import { LoginFormFields } from './LoginFormFields';
 import { LoginInitialValuesInterface } from './Utils/LoginInterfaces';
 import { isEmpty } from '../../Shared/Utils/Helpers';
 import { AppRoutes } from '../../Shared/Router/Routes';
+import { useStylesLogin } from './Styles/LoginStyles';
 
 interface LoginInterface {
   userData: UserInfoInterface | undefined
@@ -22,6 +27,8 @@ interface LoginInterface {
 export function Login({ userData }: LoginInterface): ReactElement {
   const dispatch = useDispatch<Dispatch<UpdateSessionAction>>();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const isValidUser = useCallback(
     (values: LoginInitialValuesInterface):boolean => (userData && !isEmpty(userData) ? values.email === userData.email : false),
@@ -29,32 +36,43 @@ export function Login({ userData }: LoginInterface): ReactElement {
   );
 
   return (
-    <Paper elevation={3}>
-      <Formik
-        initialValues={LoginInitialValues}
-        validationSchema={LoginValidationSchema}
-        onSubmit={async (values: LoginInitialValuesInterface) => {
-          const dispatchAction = dispatch as Dispatch<SystemActionTypes>;
-          if (userData && isValidUser(values)) {
-            const role = getUserRoleByString(userData.role);
-            const userInfo = {
-              ...userData,
-              role,
-            };
-            dispatchAction(updateSession(userInfo));
-            navigate(AppRoutes.Dashboard);
-          } else {
-            alert('no such user');
-          }
-        }}
-      >
-        {({ errors, touched }) => (
-          <Form>
-            <LoginFormFields errors={errors} touched={touched} />
-            <button type="submit">Submit</button>
-          </Form>
-        )}
-      </Formik>
-    </Paper>
+    <Box sx={useStylesLogin(theme).box}>
+      <Paper elevation={3}>
+        <Formik
+          initialValues={LoginInitialValues}
+          validationSchema={LoginValidationSchema}
+          onSubmit={async (values: LoginInitialValuesInterface) => {
+            const dispatchAction = dispatch as Dispatch<SystemActionTypes>;
+            if (userData && isValidUser(values)) {
+              const role = getUserRoleByString(userData.role);
+              const userInfo = {
+                ...userData,
+                role,
+              };
+              dispatchAction(updateSession(userInfo));
+              navigate(AppRoutes.Dashboard);
+            } else {
+              enqueueSnackbar('User is not found in public/Users.json', { variant: 'error' });
+            }
+          }}
+        >
+          {({ errors, touched }) => (
+            <Box sx={useStylesLogin(theme).form}>
+              <Form>
+                <Typography variant="h4" component="h4">
+                  Sign in
+                </Typography>
+                <Box my={2} />
+                <LoginFormFields errors={errors} touched={touched} />
+                <Box mt={2} />
+                <Box sx={useStylesLogin(theme).button}>
+                  <Button disabled={!isEmpty(errors)} endIcon={<LoginIcon />} variant="contained" type="submit">Sign in</Button>
+                </Box>
+              </Form>
+            </Box>
+          )}
+        </Formik>
+      </Paper>
+    </Box>
   );
 }

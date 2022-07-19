@@ -8,5 +8,5 @@ export interface RatesItemInterface{
 
 export interface RatesInterface {
     data: RatesItemInterface;
-    timestamp:number;
+    timestamp: number;
 }

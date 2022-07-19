@@ -6,5 +6,5 @@ export interface AssetItemIntervalInterface {
 
 export interface AssetIntervalInterface {
     data: AssetItemIntervalInterface[];
-    timestamp:number;
+    timestamp: number;
 }

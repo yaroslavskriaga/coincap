@@ -15,5 +15,5 @@ export interface AssetsItemInterface{
 
 export interface AssetsInterface {
     data: AssetsItemInterface;
-    timestamp:number;
+    timestamp: number;
 }

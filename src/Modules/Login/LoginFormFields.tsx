@@ -1,20 +1,32 @@
 import React, { ReactElement } from 'react';
 import { Field, Form } from 'formik';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
+import { useStylesLogin } from './Styles/LoginStyles';
 
 export function LoginFormFields({ errors, touched }: any): ReactElement {
+  const theme = useTheme();
+
   return (
     <>
-      <Box>
-        <label>email</label>
-        <Field name="email" type="email" />
-        {errors.email && touched.email ? <div>{errors.email}</div> : null}
+      <Box display="flex" flexDirection="column">
+        <Box sx={useStylesLogin(theme).label}>
+          <label>Email</label>
+        </Box>
+        <Box sx={useStylesLogin(theme).input}>
+          <Field autoComplete="off" name="email" type="email" />
+        </Box>
+        {errors.email && touched.email ? <Box sx={useStylesLogin(theme).errorLabel}>{errors.email}</Box> : null}
       </Box>
-      <Box>
-        <label>password</label>
-        <Field type="password" name="password" />
+      <Box my={2} />
+      <Box display="flex" flexDirection="column">
+        <Box sx={useStylesLogin(theme).label}>
+          <label>Password</label>
+        </Box>
+        <Box sx={useStylesLogin(theme).input}>
+          <Field autoComplete="off" type="password" name="password" />
+        </Box>
         {errors.password && touched.password ? (
-          <div>{errors.password}</div>
+          <Box sx={useStylesLogin(theme).errorLabel}>{errors.password}</Box>
         ) : null}
       </Box>
     </>
