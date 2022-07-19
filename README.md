@@ -4,7 +4,7 @@ Frontend dockerized application using coincap.io API and React + Typescript, Red
 ### `1. npm install`
 To install deps
 ### `2. npm run start`
-Start local version
+Start local version\
 Suggested port to open is http://localhost:3000
 ### `3. npm run build`
 Prod build
@@ -22,5 +22,5 @@ First step - Run this command to build up the container
     -e CHOKIDAR_USEPOLLING=true \
     coincap:dev
 
-Second step - Run this command to spin up a container
+Second step - Run this command to spin up a container\
 Suggested port to open is http://localhost:3001
